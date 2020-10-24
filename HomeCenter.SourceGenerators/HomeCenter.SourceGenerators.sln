@@ -7,12 +7,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.SourceGenerators
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.Example", "HomeCenter.Example\HomeCenter.Example.csproj", "{4747E4A9-88EC-4AF7-8138-699A068D0863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeCenter.SourceGenerators.Tests", "HomeCenter.SourceGenerators.Tests\HomeCenter.SourceGenerators.Tests.csproj", "{7BE6ED0F-BCB2-42C6-B746-10F597EC6409}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.SourceGenerators.Tests", "HomeCenter.SourceGenerators.Tests\HomeCenter.SourceGenerators.Tests.csproj", "{7BE6ED0F-BCB2-42C6-B746-10F597EC6409}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E76C1A45-F940-4816-8FD1-3BAB578F6317}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.Abstractions", "HomeCenter.Abstractions\HomeCenter.Abstractions.csproj", "{8CF02AF6-363F-4319-A1D9-C6B4A14E3ECE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.Actors.Core", "HomeCenter.Actors.Core\HomeCenter.Actors.Core.csproj", "{07F77271-ECE8-44CA-B272-21684C7C990A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.EventAggregator.Abstractions", "HomeCenter.EventAggregator.Abstractions\HomeCenter.EventAggregator.Abstractions.csproj", "{B75889B2-4C18-4B16-88BE-D6DB71EBC191}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.Extensions", "HomeCenter.Extensions\HomeCenter.Extensions.csproj", "{A1969119-C9BD-4374-A890-D6322452ABAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter.Messages", "HomeCenter.Messages\HomeCenter.Messages.csproj", "{30B6134D-3C79-4676-B897-BE0817EC05A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +42,26 @@ Global
 		{7BE6ED0F-BCB2-42C6-B746-10F597EC6409}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BE6ED0F-BCB2-42C6-B746-10F597EC6409}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BE6ED0F-BCB2-42C6-B746-10F597EC6409}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF02AF6-363F-4319-A1D9-C6B4A14E3ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF02AF6-363F-4319-A1D9-C6B4A14E3ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF02AF6-363F-4319-A1D9-C6B4A14E3ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF02AF6-363F-4319-A1D9-C6B4A14E3ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07F77271-ECE8-44CA-B272-21684C7C990A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07F77271-ECE8-44CA-B272-21684C7C990A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07F77271-ECE8-44CA-B272-21684C7C990A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07F77271-ECE8-44CA-B272-21684C7C990A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75889B2-4C18-4B16-88BE-D6DB71EBC191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75889B2-4C18-4B16-88BE-D6DB71EBC191}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75889B2-4C18-4B16-88BE-D6DB71EBC191}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75889B2-4C18-4B16-88BE-D6DB71EBC191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1969119-C9BD-4374-A890-D6322452ABAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1969119-C9BD-4374-A890-D6322452ABAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1969119-C9BD-4374-A890-D6322452ABAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1969119-C9BD-4374-A890-D6322452ABAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30B6134D-3C79-4676-B897-BE0817EC05A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30B6134D-3C79-4676-B897-BE0817EC05A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30B6134D-3C79-4676-B897-BE0817EC05A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30B6134D-3C79-4676-B897-BE0817EC05A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

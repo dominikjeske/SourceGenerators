@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace HomeCenter.SourceGenerators.Tests
 
                 var result = GeneratorRunner.Run(userSource, new ActorProxySourceGenerator());
 
-                Assert.Empty(result.diagnostics);
+                Assert.Empty(result.Diagnostics);
                 Assert.Empty(result.Compilation.GetDiagnostics());
             }
         }
@@ -38,24 +39,45 @@ namespace HomeCenter.SourceGenerators.Tests
             { 
                 MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) 
             };
-            var options = new CSharpCompilationOptions(OutputKind.ConsoleApplication);
+            var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
             var compilation = CSharpCompilation.Create(nameof(GeneratorRunner), syntaxTrees, references, options);
 
             return compilation;
         }
-        public static GeneratorResult Run(string sourceCode, params ISourceGenerator[] generators)
+        public static GeneratorResult Run(string sourceCode, ISourceGenerator generators)
         {
             Compilation compilation = CreateCompilation(sourceCode);
 
-            var driver = CSharpGeneratorDriver.Create(ImmutableArray.Create(generators), 
-                                                      ImmutableArray<AdditionalText>.Empty, 
-                                                      (CSharpParseOptions)compilation.SyntaxTrees.First().Options, 
+            var driver = CSharpGeneratorDriver.Create(ImmutableArray.Create(generators),
+                                                      ImmutableArray<AdditionalText>.Empty,
+                                                      (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
                                                       null);
             driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
-            return new GeneratorResult(outputCompilation, diagnostics);
+
+            var generatedCode = GetGeneratedCode(generators, outputCompilation);
+
+            return new GeneratorResult(outputCompilation, diagnostics, generatedCode);
+        }
+
+        private static string GetGeneratedCode(ISourceGenerator generators, Compilation outputCompilation)
+        {
+            return outputCompilation.SyntaxTrees.FirstOrDefault(file => file.FilePath.IndexOf(generators.GetType().Name) > -1)?.ToString();
         }
     }
 
-    internal record GeneratorResult(Compilation Compilation, ImmutableArray<Diagnostic> diagnostics);
+    public static class StringExtensions
+    {
+        public static string TrimWhiteSpaces(this string text)
+        {
+            if (text == null)
+            {
+                return text;
+            }
+
+            return Regex.Replace(text, @"\s+", string.Empty);
+        }
+    }
+
+    internal record GeneratorResult(Compilation Compilation, ImmutableArray<Diagnostic> Diagnostics, string generatedCode);
 }

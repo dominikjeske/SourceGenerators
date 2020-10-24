@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HomeCenter.Abstractions;
+using HomeCenter.Actors.Core;
+using Proto;
 
 namespace HomeCenter.SourceGenerators.Tests.TestSources
 {
-    class ActorProxyTestSources
+    internal class ActorProxyTestSources : Adapter
     {
+        private readonly IRoslynCompilerService _roslynCompilerService;
+
+        public ActorProxyTestSources(IRoslynCompilerService roslynCompilerService)
+        {
+            _roslynCompilerService = roslynCompilerService;
+        }
     }
 }
