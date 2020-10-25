@@ -1,0 +1,8 @@
+﻿{{Usings}}
+
+namespace {{Namespace}}
+{
+    public class {{ClassName}} : {{ClassBase}}
+    {
+    }
+}

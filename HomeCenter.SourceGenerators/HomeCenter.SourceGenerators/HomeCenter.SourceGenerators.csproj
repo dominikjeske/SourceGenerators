@@ -6,8 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\ActorProxy.template" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\ActorProxy.template" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-5.final" />
     <PackageReference Include="Proto.Actor" Version="0.9.0" />
+    <PackageReference Include="Scriban" Version="3.0.0-alpha.9" />
   </ItemGroup>
 
   <ItemGroup>
