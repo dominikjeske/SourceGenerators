@@ -1,11 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Scriban;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace HomeCenter.SourceGenerators
 {
@@ -29,7 +25,7 @@ namespace HomeCenter.SourceGenerators
 
             var proxyModel = new ProxyModel();
 
-            proxyModel.BaseClassName = proxy.Identifier.Text;
+            proxyModel.ClassBase = proxy.Identifier.Text;
 
             proxyModel.ClassName = $"{proxy.Identifier.Text}Proxy";
 
@@ -44,68 +40,16 @@ namespace HomeCenter.SourceGenerators
                                        .Name
                                        .ToString();
 
-            var xx = ResourceReader.GetEmbededResourceNames<ActorProxySourceGenerator>();
+            var templateString = ResourceReader.GetResource("ActorProxy.template");
 
-            var template = Template.Parse("Hello {{name}}!");
-            var result = template.Render(new { Name = "World" }); // => "Hello World!" 
+            var result = TemplateGenerator.Execute(templateString, proxyModel);
 
-            return new GeneratedSource("", proxyModel.ClassName);
+            return new GeneratedSource(result, proxyModel.ClassName);
         }
 
         public void Initialize(GeneratorInitializationContext context)
         {
             context.RegisterForSyntaxNotifications(() => new ActorSyntaxReceiver());
-        }
-    }
-
-    public class ResourceReader
-    {
-        public static IEnumerable<string> FindEmbededResources<TAssembly>(Func<string, bool> predicate)
-        {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            return
-                GetEmbededResourceNames<TAssembly>()
-                    .Where(predicate)
-                    .Select(name => ReadEmbededResource(typeof(TAssembly), name))
-                    .Where(x => !string.IsNullOrEmpty(x));
-        }
-
-        public static IEnumerable<string> GetEmbededResourceNames<TAssembly>()
-        {
-            var assembly = Assembly.GetAssembly(typeof(TAssembly));
-            return assembly.GetManifestResourceNames();
-        }
-
-        public static string ReadEmbededResource<TAssembly, TNamespace>(string name)
-        {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            return ReadEmbededResource(typeof(TAssembly), typeof(TNamespace), name);
-        }
-
-        public static string ReadEmbededResource(Type assemblyType, Type namespaceType, string name)
-        {
-            if (assemblyType == null) throw new ArgumentNullException(nameof(assemblyType));
-            if (namespaceType == null) throw new ArgumentNullException(nameof(namespaceType));
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-
-            return ReadEmbededResource(assemblyType, $"{namespaceType.Namespace}.{name}");
-        }
-
-        public static string ReadEmbededResource(Type assemblyType, string name)
-        {
-            if (assemblyType == null) throw new ArgumentNullException(nameof(assemblyType));
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-
-            var assembly = Assembly.GetAssembly(assemblyType);
-            using (var resourceStream = assembly.GetManifestResourceStream(name))
-            {
-                if (resourceStream == null) return null;
-                using (var streamReader = new StreamReader(resourceStream))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
         }
     }
 
@@ -117,7 +61,7 @@ namespace HomeCenter.SourceGenerators
 
         public string Namespace { get; set; }
 
-        public string BaseClassName { get; set; }
+        public string ClassBase { get; set; }
 
         public List<string> Usings { get; set; } = new List<string>();
     };
