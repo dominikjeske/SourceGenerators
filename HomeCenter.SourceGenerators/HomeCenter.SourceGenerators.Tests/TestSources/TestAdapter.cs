@@ -7,16 +7,19 @@ namespace HomeCenter.SourceGenerators.Tests
     [ProxyCodeGenerator]
     public class TestAdapter : Adapter
     {
-        protected async Task Handle(CapabilitiesQuery message)
+        protected Task<string> Handle(CapabilitiesQuery message)
         {
+            return Task.FromResult("xxx");
         }
 
-        protected async Task Handle(SupportedStatesQuery message)
+        protected Task<string> HandleSupportedState(SupportedStatesQuery message)
         {
+            return Task.FromResult("xxx");
         }
 
-        protected async Task Handle(StateQuery message)
+        protected Task<string> HandleState(StateQuery message)
         {
+            return Task.FromResult("xxx");
         }
     }
 }

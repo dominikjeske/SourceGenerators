@@ -2,7 +2,7 @@
 
 namespace HomeCenter.SourceGenerators
 {
-    public static class TemplateGenerator
+    internal static class TemplateGenerator
     {
         public static string Execute(string templateString, object model)
         {
@@ -11,4 +11,5 @@ namespace HomeCenter.SourceGenerators
             return result;
         }
     }
+
 }

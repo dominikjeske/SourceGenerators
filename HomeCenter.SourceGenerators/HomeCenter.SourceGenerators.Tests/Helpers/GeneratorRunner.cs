@@ -1,5 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.Extensions.DependencyModel;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -14,10 +16,15 @@ namespace HomeCenter.SourceGenerators.Tests
             { 
                 CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) 
             };
-            var references = new[] 
-            { 
-                MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) 
-            };
+
+            var references = new List<PortableExecutableReference>();
+            foreach (var library in DependencyContext.Default.RuntimeLibraries.Where(lib => lib.Name.IndexOf("HomeCenter.") > -1))
+            {
+                var assembly = Assembly.Load(new AssemblyName(library.Name));
+                references.Add(MetadataReference.CreateFromFile(assembly.Location));
+            }
+            references.Add(MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location));
+
             var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
             var compilation = CSharpCompilation.Create(nameof(GeneratorRunner), syntaxTrees, references, options);
 

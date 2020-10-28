@@ -18,24 +18,24 @@ namespace HomeCenter.SourceGenerators.Tests
                 ic.Context = context;
             }
 
-            if (msg is CapabilitiesQuery query_0)
-            {
-                var result = Handle(query_0);
-                context.Respond(result);
-                return;
-            }
-            else if (msg is SupportedStatesQuery query_1)
-            {
-                var result = Handle(query_1);
-                context.Respond(result);
-                return;
-            }
-            else if (msg is StateQuery query_2)
-            {
-                var result = Handle(query_2);
-                context.Respond(result);
-                return;
-            }
+            //if (msg is CapabilitiesQuery query_0)
+            //{
+            //    var result = Handle(query_0);
+            //    context.Respond(result);
+            //    return;
+            //}
+            //else if (msg is SupportedStatesQuery query_1)
+            //{
+            //    var result = Handle(query_1);
+            //    context.Respond(result);
+            //    return;
+            //}
+            //else if (msg is StateQuery query_2)
+            //{
+            //    var result = Handle(query_2);
+            //    context.Respond(result);
+            //    return;
+            //}
 
             await UnhandledMessage(msg);
         }

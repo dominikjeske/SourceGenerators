@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Templates\ActorProxy.template" />
+    <None Remove="Templates\ActorProxy.scriban" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Templates\ActorProxy.template" />
+    <EmbeddedResource Include="Templates\ActorProxy.scriban" />
   </ItemGroup>
 
   <ItemGroup>

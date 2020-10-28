@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace HomeCenter.SourceGenerators
 {
-    public class ResourceReader
+    internal class ResourceReader
     {
         public static string GetResource<TAssembly>(string endWith) => GetResource(endWith, typeof(TAssembly));
         
