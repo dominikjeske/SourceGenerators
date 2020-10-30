@@ -16,7 +16,7 @@ namespace HomeCenter.SourceGenerators
                 syntaxNode is ClassDeclarationSyntax classSyntax && 
                 classSyntax.AttributeLists.Count > 0 &&
                 classSyntax.AttributeLists.SelectMany(al => al.Attributes
-                                          .Where(a => (a.Name as IdentifierNameSyntax).Identifier.Text == "ProxyCodeGenerator"))
+                                          .Where(a => (a.Name as IdentifierNameSyntax).Identifier.Text == ProxyAttribute.Name))
                                           .Any()
             )
             {

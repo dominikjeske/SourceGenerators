@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace HomeCenter.SourceGenerators.Tests
 {
-    public class TestAdapterProxy : TestAdapter
+    [GeneratedCode]
+    public sealed class TestAdapterProxy : TestAdapter
     {
         public TestAdapterProxy(HomeCenter.Abstractions.IValueConverter valueConverter, System.Collections.Generic.IList<string> list, HomeCenter.Abstractions.IMessageBroker messageBroker, Microsoft.Extensions.Logging.ILogger logger) : base(valueConverter, list)
         {

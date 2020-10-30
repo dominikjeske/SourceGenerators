@@ -11,6 +11,8 @@ namespace HomeCenter.SourceGenerators
 
         public string ClassBase { get; set; }
 
+        public string ClassModifier { get; set; }
+
         public List<string> Usings { get; set; } = new List<string>();
 
         public List<MethodDescription> Commands { get; set; } = new List<MethodDescription>();

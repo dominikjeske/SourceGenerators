@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HomeCenter.SourceGenerators.Tests
 {
-    [ProxyCodeGenerator]
+    [Proxy]
     public class TestAdapter : Adapter
     {
         public TestAdapter(IValueConverter valueConverter, IList<string> list)

@@ -3,7 +3,8 @@
 namespace HomeCenter.SourceGenerators
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
-    public class ProxyCodeGeneratorAttribute : Attribute
+    public class ProxyAttribute : Attribute
     {
+        public static string Name = nameof(ProxyAttribute).Replace("Attribute", string.Empty);
     }
 }

@@ -56,7 +56,9 @@ namespace HomeCenter.SourceGenerators
             {
                 ClassBase = GetClassName(classSyntax),
 
-                ClassName = $"{GetClassName(classSyntax)}Proxy",
+                ClassName = $"{GetClassName(classSyntax)}{ProxyAttribute.Name}",
+
+                ClassModifier = GetClassModifier(classSyntax),
 
                 Usings = GetUsings(root),
 
@@ -135,6 +137,8 @@ namespace HomeCenter.SourceGenerators
         }
 
         private static string GetClassName(ClassDeclarationSyntax proxy) => proxy.Identifier.Text;
+
+        private static string GetClassModifier(ClassDeclarationSyntax proxy) => proxy.Modifiers.ToFullString();
 
         private static string GetNamespace(CompilationUnitSyntax root)
         {
