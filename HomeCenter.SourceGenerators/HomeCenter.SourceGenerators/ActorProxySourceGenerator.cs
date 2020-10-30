@@ -50,6 +50,7 @@ namespace HomeCenter.SourceGenerators
             var root = classSyntax.Ancestors().OfType<CompilationUnitSyntax>().FirstOrDefault();
 
             var classSemanticModel = compilation.GetSemanticModel(classSyntax.SyntaxTree);
+            var classSymbol = classSemanticModel.GetDeclaredSymbol(classSyntax);
 
             var proxyModel = new ProxyModel
             {
@@ -67,19 +68,17 @@ namespace HomeCenter.SourceGenerators
 
                 Events = GetMethodWithParameter(classSyntax, classSemanticModel, nameof(Event)),
 
-                ConstructorParameters = GetConstructor(classSyntax, classSemanticModel),
+                ConstructorParameters = GetConstructor(classSymbol),
 
-                InjectedProperties = GetInjectedProperties(classSyntax, classSemanticModel)
+                InjectedProperties = GetInjectedProperties(classSymbol)
             };
 
             return proxyModel;
         }
 
-        private List<ParameterDescriptor> GetConstructor(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
+        private List<ParameterDescriptor> GetConstructor(INamedTypeSymbol classSymbol)
         {
-            var classSemantic = semanticModel.GetDeclaredSymbol(classSyntax);
-
-            IMethodSymbol baseConstructor = classSemantic.Constructors.OrderByDescending(p => p.Parameters.Length).FirstOrDefault();
+            IMethodSymbol baseConstructor = classSymbol.Constructors.OrderByDescending(p => p.Parameters.Length).FirstOrDefault();
 
             var parList = baseConstructor.Parameters.Select(par => new ParameterDescriptor()
             {
@@ -90,20 +89,19 @@ namespace HomeCenter.SourceGenerators
             return parList;
         }
 
-        private List<PropertyAssignDescriptor> GetInjectedProperties(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
+        private List<PropertyAssignDescriptor> GetInjectedProperties(INamedTypeSymbol classSymbol)
         {
-            var classSemantic = semanticModel.GetDeclaredSymbol(classSyntax);
+ 
+            var dependencyProperties = classSymbol.GetAllMembers()
+                                                  .Where(x => x.Kind == SymbolKind.Property && x.GetAttributes().Any(a => a.AttributeClass.Name == nameof(DIAttribute)))
+                                                  .OfType<IPropertySymbol>()
+                                                  .Select(par => new PropertyAssignDescriptor()
+                                                  {
+                                                      Destination = par.Name,
+                                                      Type = par.Type.ToString(),
+                                                      Source = par.Name.ToCamelCase()
 
-            var dependencyProperties = classSemantic.GetAllMembers()
-                                                    .Where(x => x.Kind == SymbolKind.Property && x.GetAttributes().Any(a => a.AttributeClass.Name == nameof(DIAttribute)))
-                                                    .OfType<IPropertySymbol>()
-                                                    .Select(par => new PropertyAssignDescriptor()
-                                                    {
-                                                        Destination = par.Name,
-                                                        Type = par.Type.ToString(),
-                                                        Source = par.Name.ToCamelCase()
-
-                                                    }).ToList();
+                                                  }).ToList();
             return dependencyProperties;
         }
 
