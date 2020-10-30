@@ -131,17 +131,6 @@ namespace HomeCenter.SourceGenerators
                 // TODO write recursive base type check
             }).ToList();
 
-            //if (_context.Compilation != null && model.GetDeclaredSymbol(classSyntax)?.BaseType?.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is ClassDeclarationSyntax subClassSyntax)
-            //{
-            //    var semanticModel = _context.Compilation.GetSemanticModel(subClassSyntax.SyntaxTree);
-
-            //    // add usings from base class
-            //    _usingSyntax.AddRange(subClassSyntax.SyntaxTree.GetRoot().DescendantNodes().OfType<UsingDirectiveSyntax>());
-
-            //    var sub = GetMethodListInner(subClassSyntax, semanticModel, parameterType, attributeType);
-            //    result.AddRange(sub);
-            //}
-
             return result;
         }
 
