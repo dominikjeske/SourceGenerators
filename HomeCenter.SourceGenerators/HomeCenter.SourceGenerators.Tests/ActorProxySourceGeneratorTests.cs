@@ -10,11 +10,12 @@ namespace HomeCenter.SourceGenerators.Tests
         public async Task SimpleGeneratorTest()
         {
             var userSource = await File.ReadAllTextAsync(@"..\..\..\TestInputs\TestAdapter.cs");
+            var expectedResult = await File.ReadAllTextAsync(@"..\..\..\TestOutputs\TestAdapterProxy.cs");
 
             var result = GeneratorRunner.Run(userSource, new ActorProxySourceGenerator());
 
-            Assert.Empty(result.Diagnostics);
-            Assert.Empty(result.Compilation.GetDiagnostics());
+            expectedResult.AssertSourceCodesEquals(result.generatedCode);
         }
     }
+
 }

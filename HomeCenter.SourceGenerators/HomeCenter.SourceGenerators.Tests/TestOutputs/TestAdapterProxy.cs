@@ -1,9 +1,11 @@
 ﻿using HomeCenter.Abstractions;
 using HomeCenter.Actors.Core;
 using HomeCenter.Messages.Commands.Device;
+using HomeCenter.Messages.Commands.Service;
 using HomeCenter.Messages.Events.Device;
 using HomeCenter.Messages.Events.Service;
 using HomeCenter.Messages.Queries.Device;
+using HomeCenter.Messages.Queries.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -46,6 +48,12 @@ namespace HomeCenter.SourceGenerators.Tests
                 context.Respond(result);
                 return;
             }
+            else if (msg is TcpQuery query_3)
+            {
+                var result = await Handle(query_3);
+                context.Respond(result);
+                return;
+            }
             if (msg is AdjustPowerLevelCommand command_0)
             {
                 await HandleState(command_0);
@@ -54,6 +62,11 @@ namespace HomeCenter.SourceGenerators.Tests
             else if (msg is ModeSetCommand command_1)
             {
                 HandleState(command_1);
+                return;
+            }
+            else if (msg is TcpCommand command_2)
+            {
+                await Handle(command_2);
                 return;
             }
             if (msg is SystemStartedEvent event_0)
@@ -67,6 +80,15 @@ namespace HomeCenter.SourceGenerators.Tests
                 return;
             }
             await UnhandledMessage(msg);
+        }
+
+
+        protected override async Task OnStarted(Proto.IContext context)
+        {
+            await base.OnStarted(context);
+
+            Subscribe<TcpCommand>();
+            Subscribe<TcpQuery, string>(true);
         }
     }
 }

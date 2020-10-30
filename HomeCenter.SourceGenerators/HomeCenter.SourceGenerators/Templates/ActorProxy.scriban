@@ -64,5 +64,16 @@ namespace {{Namespace}}
 
             await UnhandledMessage(msg);
         }
+
+        {{ if HasSubscriptions }}
+        protected override async Task OnStarted(Proto.IContext context)
+        {
+            await base.OnStarted(context);
+
+            {{ for sub in Subscriptions ~}}
+            Subscribe<{{sub.MessageType}}{{ if sub.HasReturnType}}, {{sub.ReturnTypeGenericArgument}}{{ end -}} >({{ if sub.SubscribeOnParent}}true{{ end -}});
+            {{ end ~}}
+        }
+        {{ end -}}
     }
 }

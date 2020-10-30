@@ -11,5 +11,4 @@ namespace HomeCenter.SourceGenerators
             return result;
         }
     }
-
 }

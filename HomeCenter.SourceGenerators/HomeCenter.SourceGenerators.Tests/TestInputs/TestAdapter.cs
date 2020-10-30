@@ -1,9 +1,11 @@
 ﻿using HomeCenter.Abstractions;
 using HomeCenter.Actors.Core;
 using HomeCenter.Messages.Commands.Device;
+using HomeCenter.Messages.Commands.Service;
 using HomeCenter.Messages.Events.Device;
 using HomeCenter.Messages.Events.Service;
 using HomeCenter.Messages.Queries.Device;
+using HomeCenter.Messages.Queries.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,7 +16,6 @@ namespace HomeCenter.SourceGenerators.Tests
     {
         public TestAdapter(IValueConverter valueConverter, IList<string> list)
         {
-
         }
 
         protected Task<string> Handle(CapabilitiesQuery message)
@@ -32,7 +33,6 @@ namespace HomeCenter.SourceGenerators.Tests
             return Task.FromResult("xxx");
         }
 
-
         protected Task HandleState(AdjustPowerLevelCommand command)
         {
             return Task.CompletedTask;
@@ -40,7 +40,6 @@ namespace HomeCenter.SourceGenerators.Tests
 
         protected void HandleState(ModeSetCommand command)
         {
-            
         }
 
         protected Task OnSystemStarted(SystemStartedEvent command)
@@ -50,7 +49,18 @@ namespace HomeCenter.SourceGenerators.Tests
 
         protected void OnMotion(MotionEvent command)
         {
+        }
 
+        [Subscribe(true)]
+        protected Task<string> Handle(TcpQuery tcpCommand)
+        {
+            return Task.FromResult("");
+        }
+
+        [Subscribe]
+        protected Task Handle(TcpCommand tcpCommand)
+        {
+            return Task.CompletedTask;
         }
     }
 }

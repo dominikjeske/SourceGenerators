@@ -14,3 +14,6 @@ https://github.com/b-straub/BlazorSourceGeneratorTests/blob/master/Tests/Generat
 https://jaylee.org/archive/2020/10/10/profiling-csharp-9-source-generators.html
 https://nicksnettravels.builttoroam.com/debug-code-gen/
 https://github.com/chsienki/kittitas
+
+#Scriban
+https://github.com/lunet-io/scriban/blob/master/doc/language.md#93-loops

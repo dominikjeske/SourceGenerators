@@ -72,10 +72,48 @@ namespace HomeCenter.SourceGenerators
 
                 ConstructorParameters = GetConstructor(classSymbol),
 
-                InjectedProperties = GetInjectedProperties(classSymbol)
+                InjectedProperties = GetInjectedProperties(classSymbol),
+
+                Subscriptions = GetSubscriptions(classSyntax, classSemanticModel)
             };
 
             return proxyModel;
+        }
+
+        private List<SubscriptionDescriptor> GetSubscriptions(ClassDeclarationSyntax classSyntax, SemanticModel model)
+        {
+            var commands = GetMethodWithParameter(classSyntax, model, "Command", "Subscribe");
+            var events = GetMethodWithParameter(classSyntax, model, "Event", "Subscribe");
+            var queries = GetMethodWithParameter(classSyntax, model, "Query", "Subscribe");
+
+            var subscriptions = commands.Select(c => new SubscriptionDescriptor
+            {
+                MessageType = c.ParameterType,
+                SubscribeOnParent = IsSubscribeOnParent(c)
+            }).Union
+            (
+                queries.Select(c => new SubscriptionDescriptor
+                {
+                    MessageType = c.ParameterType,
+                    ReturnType = c.ReturnType,
+                    ReturnTypeGenericArgument = c.ReturnTypeGenericArgument,
+                    SubscribeOnParent = IsSubscribeOnParent(c)
+                })
+            ).Union
+            (
+                events.Select(c => new SubscriptionDescriptor
+                {
+                    MessageType = c.ParameterType,
+                    SubscribeOnParent = IsSubscribeOnParent(c)
+                })
+            ).ToList();
+
+            return subscriptions;
+        }
+
+        private bool IsSubscribeOnParent(MethodDescription methodDescription)
+        {
+            return methodDescription.Attributes.Where(a => a.Name == "Subscribe").Any(x => x.Values.Any(val => val.IndexOf("true", StringComparison.OrdinalIgnoreCase) > -1));
         }
 
         private List<ParameterDescriptor> GetConstructor(INamedTypeSymbol classSymbol)
@@ -93,7 +131,6 @@ namespace HomeCenter.SourceGenerators
 
         private List<PropertyAssignDescriptor> GetInjectedProperties(INamedTypeSymbol classSymbol)
         {
- 
             var dependencyProperties = classSymbol.GetAllMembers()
                                                   .Where(x => x.Kind == SymbolKind.Property && x.GetAttributes().Any(a => a.AttributeClass.Name == nameof(DIAttribute)))
                                                   .OfType<IPropertySymbol>()
@@ -102,7 +139,6 @@ namespace HomeCenter.SourceGenerators
                                                       Destination = par.Name,
                                                       Type = par.Type.ToString(),
                                                       Source = par.Name.ToCamelCase()
-
                                                   }).ToList();
             return dependencyProperties;
         }
@@ -122,14 +158,20 @@ namespace HomeCenter.SourceGenerators
             {
                 Name = method.Identifier.ValueText,
                 ReturnType = model.GetTypeInfo(method.ReturnType).Type as INamedTypeSymbol,
-                Parameter = (IParameterSymbol)model.GetDeclaredSymbol(method.ParameterList.Parameters.FirstOrDefault())
+                Parameter = model.GetDeclaredSymbol(method.ParameterList.Parameters.FirstOrDefault()),
+                Attributes = method.AttributeLists.SelectMany(a => a.Attributes.Select(ax => new AttributeDescriptor
+                {
+                    Name = ax.Name.ToString(),
+                    Values = (ax?.ArgumentList?.Arguments.Select(x => x.Expression.ToFullString()) ?? Enumerable.Empty<string>()).ToList()
+                }))
             }).Where(x => x.Parameter.Type.BaseType?.Name == parameterType || x.Parameter.Type.BaseType?.BaseType?.Name == parameterType || x.Parameter.Type.Name == parameterType)
             .Select(c => new MethodDescription
             {
                 MethodName = c.Name,
                 ParameterType = c.Parameter.Type.Name,
                 ReturnType = c.ReturnType.Name,
-                ReturnTypeGenericArgument = c.ReturnType.TypeArguments.FirstOrDefault()?.Name
+                ReturnTypeGenericArgument = c.ReturnType.TypeArguments.FirstOrDefault()?.ToString(),
+                Attributes = c.Attributes.ToList()
                 // TODO write recursive base type check
             }).ToList();
 

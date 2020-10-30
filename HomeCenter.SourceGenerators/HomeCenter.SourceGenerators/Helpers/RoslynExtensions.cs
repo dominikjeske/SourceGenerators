@@ -20,6 +20,5 @@ namespace HomeCenter.SourceGenerators
         {
             return type.GetBaseTypesAndThis().SelectMany(n => n.GetMembers());
         }
-
     }
 }
