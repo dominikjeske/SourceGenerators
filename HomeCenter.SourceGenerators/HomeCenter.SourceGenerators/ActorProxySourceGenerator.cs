@@ -1,5 +1,6 @@
 ﻿using HomeCenter.Abstractions;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
@@ -64,10 +65,46 @@ namespace HomeCenter.SourceGenerators
 
                 Queries = GetMethodWithParameter(classSyntax, classSemanticModel, nameof(Query)),
 
-                Events = GetMethodWithParameter(classSyntax, classSemanticModel, nameof(Event))
+                Events = GetMethodWithParameter(classSyntax, classSemanticModel, nameof(Event)),
+
+                ConstructorParameters = GetConstructor(classSyntax, classSemanticModel),
+
+                InjectedProperties = GetInjectedProperties(classSyntax, classSemanticModel)
             };
 
             return proxyModel;
+        }
+
+        private List<ParameterDescriptor> GetConstructor(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
+        {
+            var classSemantic = semanticModel.GetDeclaredSymbol(classSyntax);
+
+            IMethodSymbol baseConstructor = classSemantic.Constructors.OrderByDescending(p => p.Parameters.Length).FirstOrDefault();
+
+            var parList = baseConstructor.Parameters.Select(par => new ParameterDescriptor()
+            {
+                Name = par.Name,
+                Type = par.Type.ToString()
+            }).ToList();
+
+            return parList;
+        }
+
+        private List<PropertyAssignDescriptor> GetInjectedProperties(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
+        {
+            var classSemantic = semanticModel.GetDeclaredSymbol(classSyntax);
+
+            var dependencyProperties = classSemantic.GetAllMembers()
+                                                    .Where(x => x.Kind == SymbolKind.Property && x.GetAttributes().Any(a => a.AttributeClass.Name == nameof(DIAttribute)))
+                                                    .OfType<IPropertySymbol>()
+                                                    .Select(par => new PropertyAssignDescriptor()
+                                                    {
+                                                        Destination = par.Name,
+                                                        Type = par.Type.ToString(),
+                                                        Source = par.Name.ToCamelCase()
+
+                                                    }).ToList();
+            return dependencyProperties;
         }
 
         private List<MethodDescription> GetMethodWithParameter(ClassDeclarationSyntax classSyntax, SemanticModel model, string parameterType, string attributeType = null)

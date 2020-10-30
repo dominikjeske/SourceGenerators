@@ -9,7 +9,7 @@ namespace HomeCenter.SourceGenerators.Tests
         [Fact]
         public async Task SimpleGeneratorTest()
         {
-            var userSource = await File.ReadAllTextAsync(@"..\..\..\TestSources\TestAdapter.cs");
+            var userSource = await File.ReadAllTextAsync(@"..\..\..\TestInputs\TestAdapter.cs");
 
             var result = GeneratorRunner.Run(userSource, new ActorProxySourceGenerator());
 

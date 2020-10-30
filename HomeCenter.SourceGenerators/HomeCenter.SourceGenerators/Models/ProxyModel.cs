@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace HomeCenter.SourceGenerators
 {
@@ -18,5 +19,12 @@ namespace HomeCenter.SourceGenerators
 
         public List<MethodDescription> Events { get; set; } = new List<MethodDescription>();
 
+        public List<ParameterDescriptor> ConstructorParameters { get; set; } = new List<ParameterDescriptor>();
+
+        public List<PropertyAssignDescriptor> InjectedProperties { get; set; } = new List<PropertyAssignDescriptor>();
+
+        public IEnumerable<ParameterDescriptor> Constructor => ConstructorParameters.Concat(InjectedProperties.Select(x => x.ToCamelCase()));
+
+        public IEnumerable<string> BaseConstructor => ConstructorParameters.Select(x => x.Name);
     };
 }
