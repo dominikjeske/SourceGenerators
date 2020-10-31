@@ -11,13 +11,13 @@ namespace HomeCenter.Abstractions
         public string Uid
         {
             get => this.AsString(MessageProperties.Uid, GetType().Name);
-            init => this.SetProperty(MessageProperties.Uid, value);
+            set => this.SetProperty(MessageProperties.Uid, value);
         }
 
         public string Type
         {
             get => this.AsString(MessageProperties.Type);
-            init => this.SetProperty(MessageProperties.Type, value);
+            set => this.SetProperty(MessageProperties.Type, value);
         }
 
         public BaseObject()

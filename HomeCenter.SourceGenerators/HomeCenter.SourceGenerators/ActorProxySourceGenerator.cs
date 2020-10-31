@@ -2,9 +2,12 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace HomeCenter.SourceGenerators
 {
@@ -18,12 +21,29 @@ namespace HomeCenter.SourceGenerators
 
         public void Execute(GeneratorExecutionContext context)
         {
-            if (context.SyntaxReceiver is not ActorSyntaxReceiver actorSyntaxReciver) return;
-
-            foreach (var proxy in actorSyntaxReciver.CandidateProxies)
+            if (context.SyntaxReceiver is ActorSyntaxReceiver actorSyntaxReciver)
             {
-                var source = GenearteProxy(proxy, context.Compilation);
-                context.AddSource(source.FileName, source.SourceCode);
+
+                foreach (var proxy in actorSyntaxReciver.CandidateProxies)
+                {
+                    var source = GenearteProxy(proxy, context.Compilation);
+
+                    File.WriteAllText("E:\\tmp\\1.txt", source.SourceCode);
+
+                    //context.AddSource(source.FileName, SourceText.From(source.SourceCode, Encoding.UTF8));
+
+                    context.AddSource("myGeneratedFile.cs", SourceText.From(@"
+namespace GeneratedNamespace
+{
+    public class GeneratedClass
+    {
+        public static void GeneratedMethod()
+        {
+            // generated code
+        }
+    }
+}", Encoding.UTF8));
+                }
             }
         }
 
@@ -41,7 +61,21 @@ namespace HomeCenter.SourceGenerators
             }
             catch (Exception ex)
             {
-                return new GeneratedSource(ex.GenerateErrorSourceCode(), proxy.Identifier.Text);
+                var test = @"
+namespace GeneratedNamespace
+{
+    public class GeneratedClass
+    {
+        public static void GeneratedMethod()
+        {
+            // generated code
+        }
+    }
+}";
+
+                //ex.GenerateErrorSourceCode()
+
+                return new GeneratedSource(test, "test");
             }
         }
 

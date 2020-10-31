@@ -1,9 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\ErrorModel.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Templates\ActorProxy.scriban" />
@@ -11,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Templates\ErrorModel.cs" />
     <EmbeddedResource Include="Templates\MessageFactory.scriban" />
     <EmbeddedResource Include="Templates\ActorProxy.scriban" />
   </ItemGroup>
@@ -22,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeCenter.Actors.Core\HomeCenter.Actors.Core.csproj" />
+    <ProjectReference Include="..\HomeCenter.Abstractions\HomeCenter.Abstractions.csproj" />
   </ItemGroup>
+
 </Project>

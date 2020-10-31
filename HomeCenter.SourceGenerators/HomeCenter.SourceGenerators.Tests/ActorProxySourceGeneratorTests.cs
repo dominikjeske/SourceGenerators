@@ -14,7 +14,7 @@ namespace HomeCenter.SourceGenerators.Tests
 
             var result = GeneratorRunner.Run(userSource, new ActorProxySourceGenerator());
 
-            expectedResult.AssertSourceCodesEquals(result.generatedCode);
+            expectedResult.AssertSourceCodesEquals(result.GeneratedCode);
         }
 
 
@@ -26,7 +26,7 @@ namespace HomeCenter.SourceGenerators.Tests
 
             var result = GeneratorRunner.Run(userSource, new MessageFactoryGenerator());
 
-            expectedResult.AssertSourceCodesEquals(result.generatedCode);
+            expectedResult.AssertSourceCodesEquals(result.GeneratedCode);
         }
     }
 

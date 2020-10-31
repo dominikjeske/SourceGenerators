@@ -17,12 +17,13 @@ namespace HomeCenter.SourceGenerators
 
         public void Execute(GeneratorExecutionContext context)
         {
-            if (context.SyntaxReceiver is not MessageFactorySyntaxReceiver actorSyntaxReciver) return;
-
-            foreach (var proxy in actorSyntaxReciver.CandidateProxies)
+            if (context.SyntaxReceiver is MessageFactorySyntaxReceiver actorSyntaxReciver)
             {
-                var source = GenearteProxy(proxy, context.Compilation);
-                context.AddSource(source.FileName, source.SourceCode);
+                foreach (var proxy in actorSyntaxReciver.CandidateProxies)
+                {
+                    var source = GenearteProxy(proxy, context.Compilation);
+                    context.AddSource(source.FileName, source.SourceCode);
+                }
             }
         }
 

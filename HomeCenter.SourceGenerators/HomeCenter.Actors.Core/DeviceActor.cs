@@ -22,13 +22,13 @@ namespace HomeCenter.Actors.Core
         public bool IsEnabled
         {
             get => this.AsBool(MessageProperties.IsEnabled, true);
-            init => this.SetProperty(MessageProperties.IsEnabled, value);
+            set => this.SetProperty(MessageProperties.IsEnabled, value);
         }
 
         protected IList<string> Tags
         {
             get => this.AsList(MessageProperties.Tags);
-            init => this.SetPropertyList(MessageProperties.Tags, value.ToArray());
+            set => this.SetPropertyList(MessageProperties.Tags, value.ToArray());
         }
 
         protected readonly Behavior Behavior = new Behavior();
