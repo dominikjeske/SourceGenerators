@@ -7,9 +7,11 @@
 
   <ItemGroup>
     <None Remove="Templates\ActorProxy.scriban" />
+    <None Remove="Templates\MessageFactory.scriban" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Templates\MessageFactory.scriban" />
     <EmbeddedResource Include="Templates\ActorProxy.scriban" />
   </ItemGroup>
 

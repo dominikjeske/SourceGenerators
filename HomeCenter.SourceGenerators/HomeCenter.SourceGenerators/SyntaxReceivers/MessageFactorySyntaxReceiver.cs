@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace HomeCenter.SourceGenerators
 {
-    internal class ActorSyntaxReceiver : ISyntaxReceiver
+    internal class MessageFactorySyntaxReceiver : ISyntaxReceiver
     {
         public List<ClassDeclarationSyntax> CandidateProxies { get; } = new List<ClassDeclarationSyntax>();
 
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
         {
-            if (syntaxNode is ClassDeclarationSyntax classSyntax && classSyntax.HaveAttribute(ProxyAttribute.Name))
+            if (syntaxNode is ClassDeclarationSyntax classSyntax && classSyntax.HaveAttribute(CommandBuilderAttribute.Name))
             {
                 CandidateProxies.Add(classSyntax);
             }

@@ -1,4 +1,4 @@
-public partial class MessageGenerator
+    public partial class MessageGenerator
     {
         public async System.Threading.Tasks.Task<HomeCenter.Model.Messages.Events.Event> PublishEvent(ActorMessage source, ActorMessage destination, HomeCenter.Model.Core.IMessageBroker messageBroker, HomeCenter.Broker.RoutingFilter routingFilter)
         {

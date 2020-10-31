@@ -47,22 +47,21 @@ namespace HomeCenter.SourceGenerators
 
         private ProxyModel GetModel(ClassDeclarationSyntax classSyntax, Compilation compilation)
         {
-            var root = classSyntax.Ancestors().OfType<CompilationUnitSyntax>().FirstOrDefault();
-
+            var root = classSyntax.GetCompilationUnit();
             var classSemanticModel = compilation.GetSemanticModel(classSyntax.SyntaxTree);
             var classSymbol = classSemanticModel.GetDeclaredSymbol(classSyntax);
 
             var proxyModel = new ProxyModel
             {
-                ClassBase = GetClassName(classSyntax),
+                ClassBase = classSyntax.GetClassName(),
 
-                ClassName = $"{GetClassName(classSyntax)}{ProxyAttribute.Name}",
+                ClassName = $"{classSyntax.GetClassName()}{ProxyAttribute.Name}",
 
-                ClassModifier = GetClassModifier(classSyntax),
+                ClassModifier = classSyntax.GetClassModifier(),
 
-                Usings = GetUsings(root),
+                Usings = root.GetUsings(),
 
-                Namespace = GetNamespace(root),
+                Namespace = root.GetNamespace(),
 
                 Commands = GetMethodWithParameter(classSyntax, classSemanticModel, nameof(Command)),
 
@@ -176,27 +175,6 @@ namespace HomeCenter.SourceGenerators
             }).ToList();
 
             return result;
-        }
-
-        private static string GetClassName(ClassDeclarationSyntax proxy) => proxy.Identifier.Text;
-
-        private static string GetClassModifier(ClassDeclarationSyntax proxy) => proxy.Modifiers.ToFullString();
-
-        private static string GetNamespace(CompilationUnitSyntax root)
-        {
-            return root.ChildNodes()
-                       .OfType<NamespaceDeclarationSyntax>()
-                       .FirstOrDefault()
-                       .Name
-                       .ToString();
-        }
-
-        private static List<string> GetUsings(CompilationUnitSyntax root)
-        {
-            return root.ChildNodes()
-                       .OfType<UsingDirectiveSyntax>()
-                       .Select(n => n.Name.ToString())
-                       .ToList();
         }
     }
 }

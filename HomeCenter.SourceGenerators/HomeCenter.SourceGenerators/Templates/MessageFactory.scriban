@@ -1,0 +1,38 @@
+﻿{{ for using in Usings ~}}
+using {{ using }};
+{{ end ~}}
+
+namespace {{Namespace}}
+{
+    [GeneratedCode]
+    {{~ ClassModifier ~}} class {{ClassName}}
+    {
+        public async System.Threading.Tasks.Task<HomeCenter.Model.Messages.Events.Event> PublishEvent(ActorMessage source, ActorMessage destination, HomeCenter.Model.Core.IMessageBroker messageBroker, HomeCenter.Broker.RoutingFilter routingFilter)
+        {
+            if (destination.Type == "DipswitchEvent")
+            {
+                var @event = new HomeCenter.Model.Messages.Events.Device.DipswitchEvent();
+                @event.SetProperties(source);
+                @event.SetProperties(destination);
+                await messageBroker.Publish(@event, routingFilter);
+                return @event;
+            }
+           
+            var ev = new HomeCenter.Model.Messages.Events.Event();
+            ev.SetProperties(source);
+            ev.SetProperties(destination);
+            await messageBroker.Publish(ev, routingFilter);
+            return ev;
+        }
+
+        public HomeCenter.Model.Messages.Commands.Command CreateCommand(string message)
+        {
+            if (message == "AdjustPowerLevelCommand")
+            {
+                return new HomeCenter.Model.Messages.Commands.Device.AdjustPowerLevelCommand();
+            }
+
+            return new HomeCenter.Model.Messages.Commands.Command();
+        }
+    }
+}

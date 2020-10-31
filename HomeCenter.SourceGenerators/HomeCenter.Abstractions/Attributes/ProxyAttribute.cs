@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HomeCenter.SourceGenerators
+namespace HomeCenter.Abstractions
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class ProxyAttribute : Attribute

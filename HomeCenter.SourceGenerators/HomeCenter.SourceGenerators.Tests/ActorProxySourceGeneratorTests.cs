@@ -7,7 +7,7 @@ namespace HomeCenter.SourceGenerators.Tests
     public class ActorProxySourceGeneratorTests
     {
         [Fact]
-        public async Task SimpleGeneratorTest()
+        public async Task ProxyGeneratorTest()
         {
             var userSource = await File.ReadAllTextAsync(@"..\..\..\TestInputs\TestAdapter.cs");
             var expectedResult = await File.ReadAllTextAsync(@"..\..\..\TestOutputs\TestAdapterProxy.cs");
@@ -15,6 +15,18 @@ namespace HomeCenter.SourceGenerators.Tests
             var result = GeneratorRunner.Run(userSource, new ActorProxySourceGenerator());
 
             expectedResult.AssertSourceCodesEquals(result.generatedCode);
+        }
+
+
+        [Fact]
+        public async Task MessageFactoryTest()
+        {
+            var userSource = await File.ReadAllTextAsync(@"..\..\..\TestInputs\TestMessageFactory.cs");
+            //var expectedResult = await File.ReadAllTextAsync(@"..\..\..\TestOutputs\TestAdapterProxy.cs");
+
+            var result = GeneratorRunner.Run(userSource, new MessageFactoryGenerator());
+
+            //expectedResult.AssertSourceCodesEquals(result.generatedCode);
         }
     }
 
