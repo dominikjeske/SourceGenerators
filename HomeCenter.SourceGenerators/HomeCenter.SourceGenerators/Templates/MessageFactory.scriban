@@ -5,34 +5,38 @@ using {{ using }};
 namespace {{Namespace}}
 {
     [GeneratedCode]
-    {{~ ClassModifier ~}} class {{ClassName}}
+    {{~ ClassModifier }} class {{ClassName}}
     {
-        public async System.Threading.Tasks.Task<HomeCenter.Model.Messages.Events.Event> PublishEvent(ActorMessage source, ActorMessage destination, HomeCenter.Model.Core.IMessageBroker messageBroker, HomeCenter.Broker.RoutingFilter routingFilter)
+        public async System.Threading.Tasks.Task<Event> PublishEvent(ActorMessage source, ActorMessage destination, IMessageBroker messageBroker, EventAggregator.RoutingFilter routingFilter)
         {
-            if (destination.Type == "DipswitchEvent")
+            {{ for event in Events ~}}
+            {{ if for.index == 0 }}if{{ else }}else if{{ end -}} (destination.Type == "{{ event.Name }}")
             {
-                var @event = new HomeCenter.Model.Messages.Events.Device.DipswitchEvent();
+                var @event = new {{event.Namespace}}.{{event.Name}}();
                 @event.SetProperties(source);
                 @event.SetProperties(destination);
                 await messageBroker.Publish(@event, routingFilter);
                 return @event;
             }
-           
-            var ev = new HomeCenter.Model.Messages.Events.Event();
+            {{ end ~}}
+
+            var ev = new Event();
             ev.SetProperties(source);
             ev.SetProperties(destination);
             await messageBroker.Publish(ev, routingFilter);
             return ev;
         }
 
-        public HomeCenter.Model.Messages.Commands.Command CreateCommand(string message)
+        public Command CreateCommand(string message)
         {
-            if (message == "AdjustPowerLevelCommand")
+            {{ for command in Commands ~}}
+            {{ if for.index == 0 }}if{{ else }}else if{{ end -}} (message == "{{ command.Name }}")
             {
-                return new HomeCenter.Model.Messages.Commands.Device.AdjustPowerLevelCommand();
+                return new {{command.Namespace}}.{{command.Name}}();
             }
+            {{ end ~}}
 
-            return new HomeCenter.Model.Messages.Commands.Command();
+            return new Command();
         }
     }
 }

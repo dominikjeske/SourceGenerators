@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HomeCenter.SourceGenerators
@@ -18,12 +16,5 @@ namespace HomeCenter.SourceGenerators
         public bool IsReturnTask => string.CompareOrdinal(ReturnType, nameof(Task)) == 0;
 
         public List<AttributeDescriptor> Attributes { get; set; }
-    }
-
-    internal class AttributeDescriptor
-    {
-        public string Name { get; set; }
-
-        public List<string> Values { get; set; }
     }
 }

@@ -1,6 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using HomeCenter.Abstractions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HomeCenter.SourceGenerators
 {
@@ -54,9 +57,39 @@ namespace HomeCenter.SourceGenerators
                 Usings = root.GetUsings(),
 
                 Namespace = root.GetNamespace(),
+
+                Commands = GetCommands(compilation),
+
+                Events = GetEvents(compilation)
             };
 
             return proxyModel;
+        }
+
+        private List<CommandDescriptor> GetCommands(Compilation compilation)
+        {
+            return compilation.GetSymbolsWithName(x => x.IndexOf(nameof(Command)) > -1, SymbolFilter.Type)
+                              .OfType<INamedTypeSymbol>()
+                              .Where(y => y.BaseType.Name == nameof(Command) && !y.IsAbstract)
+                              .Select(c => new CommandDescriptor
+                              {
+                                  Name = c.Name,
+                                  Namespace = c.ContainingNamespace.ToString()
+                              })
+                              .ToList();
+        }
+
+        private List<EventDescriptor> GetEvents(Compilation compilation)
+        {
+            return compilation.GetSymbolsWithName(x => x.IndexOf(nameof(Event)) > -1, SymbolFilter.Type)
+                              .OfType<INamedTypeSymbol>()
+                              .Where(y => y.BaseType.Name == nameof(Event) && !y.IsAbstract)
+                              .Select(c => new EventDescriptor
+                              {
+                                  Name = c.Name,
+                                  Namespace = c.ContainingNamespace.ToString()
+                              })
+                              .ToList();
         }
     }
 }
