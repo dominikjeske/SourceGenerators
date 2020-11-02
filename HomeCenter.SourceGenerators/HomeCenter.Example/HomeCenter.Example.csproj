@@ -6,6 +6,7 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\HomeCenter.Abstractions\HomeCenter.Abstractions.csproj" />
     <ProjectReference Include="..\HomeCenter.Actors.Core\HomeCenter.Actors.Core.csproj" />

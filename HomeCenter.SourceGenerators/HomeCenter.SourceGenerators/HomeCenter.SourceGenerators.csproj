@@ -6,28 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\ErrorModel.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Templates\ActorProxy.scriban" />
-    <None Remove="Templates\MessageFactory.scriban" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Templates\ErrorModel.cs" />
-    <EmbeddedResource Include="Templates\MessageFactory.scriban" />
-    <EmbeddedResource Include="Templates\ActorProxy.scriban" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-5.final" />
-    <PackageReference Include="Proto.Actor" Version="0.9.0" />
-    <PackageReference Include="Scriban" Version="3.0.0-alpha.9" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-5.final" PrivateAssets="all" />
+    <PackageReference Include="Scriban" Version="2.1.4" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HomeCenter.Abstractions\HomeCenter.Abstractions.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(PkgScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
 </Project>

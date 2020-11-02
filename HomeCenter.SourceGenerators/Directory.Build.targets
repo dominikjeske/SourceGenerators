@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup>
+    <EmbeddedResource Include="@(None -> WithMetadataValue('Extension', '.scriban'))" />
+    <EmbeddedResource Include="@(None -> WithMetadataValue('Extension', '.cstemplate'))" />
+  </ItemGroup>
+</Project>

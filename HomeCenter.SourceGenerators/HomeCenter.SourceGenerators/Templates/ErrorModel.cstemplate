@@ -2,8 +2,6 @@
 {
     public partial class ErrorModel
     {
-        /*
-       {Placeholder}
-       */
+       //Error
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -23,35 +22,22 @@ namespace HomeCenter.SourceGenerators
         {
             if (context.SyntaxReceiver is ActorSyntaxReceiver actorSyntaxReciver)
             {
-
                 foreach (var proxy in actorSyntaxReciver.CandidateProxies)
                 {
-                    var source = GenearteProxy(proxy, context.Compilation);
+                    var source = GenearteProxy(proxy, context);
 
-                    File.WriteAllText("E:\\tmp\\1.txt", source.SourceCode);
+                    context.TryLogSource<ActorProxySourceGenerator>(proxy, source);
 
-                    //context.AddSource(source.FileName, SourceText.From(source.SourceCode, Encoding.UTF8));
-
-                    context.AddSource("myGeneratedFile.cs", SourceText.From(@"
-namespace GeneratedNamespace
-{
-    public class GeneratedClass
-    {
-        public static void GeneratedMethod()
-        {
-            // generated code
-        }
-    }
-}", Encoding.UTF8));
+                    context.AddSource(source.FileName, SourceText.From(source.SourceCode, Encoding.UTF8));
                 }
             }
         }
 
-        private GeneratedSource GenearteProxy(ClassDeclarationSyntax proxy, Compilation compilation)
+        private GeneratedSource GenearteProxy(ClassDeclarationSyntax proxy, GeneratorExecutionContext executionContext)
         {
             try
             {
-                var proxyModel = GetModel(proxy, compilation);
+                var proxyModel = GetModel(proxy, executionContext.Compilation);
 
                 var templateString = ResourceReader.GetResource("ActorProxy.scriban");
 
@@ -61,21 +47,12 @@ namespace GeneratedNamespace
             }
             catch (Exception ex)
             {
-                var test = @"
-namespace GeneratedNamespace
-{
-    public class GeneratedClass
-    {
-        public static void GeneratedMethod()
-        {
-            // generated code
-        }
-    }
-}";
+                DiagnosticDescriptor Rule = new DiagnosticDescriptor("66666", "Title", "Test", "Test", DiagnosticSeverity.Error, isEnabledByDefault: true, description: "Description xxx");
 
-                //ex.GenerateErrorSourceCode()
 
-                return new GeneratedSource(test, "test");
+//                executionContext.ReportDiagnostic(Diagnostic.Create(Rule, proxy.GetLocation()));
+
+                return ex.GenerateErrorSourceCode<ActorProxySourceGenerator>(proxy);
             }
         }
 
