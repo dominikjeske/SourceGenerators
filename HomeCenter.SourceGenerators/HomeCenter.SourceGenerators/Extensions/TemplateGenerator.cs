@@ -1,4 +1,6 @@
-﻿using Scriban;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Scriban;
 
 namespace HomeCenter.SourceGenerators
 {
@@ -8,6 +10,12 @@ namespace HomeCenter.SourceGenerators
         {
             var template = Template.Parse(templateString);
             var result = template.Render(model, memberRenamer: member => member.Name);
+
+            result = SyntaxFactory.ParseCompilationUnit(result)
+                                  .NormalizeWhitespace()
+                                  .GetText()
+                                  .ToString();
+
             return result;
         }
     }

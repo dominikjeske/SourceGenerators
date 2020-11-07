@@ -18,16 +18,16 @@ namespace HomeCenter.SourceGenerators.Tests
         }
 
 
-        [Fact]
-        public async Task MessageFactoryTest()
-        {
-            var userSource = await File.ReadAllTextAsync(@"..\..\..\TestInputs\TestMessageFactory.cs");
-            var expectedResult = await File.ReadAllTextAsync(@"..\..\..\TestOutputs\TestMessageFactoryOutput.cs");
+        //[Fact]
+        //public async Task MessageFactoryTest()
+        //{
+        //    var userSource = await File.ReadAllTextAsync(@"..\..\..\TestInputs\TestMessageFactory.cs");
+        //    var expectedResult = await File.ReadAllTextAsync(@"..\..\..\TestOutputs\TestMessageFactoryOutput.cs");
 
-            var result = GeneratorRunner.Run(userSource, new MessageFactoryGenerator());
+        //    var result = GeneratorRunner.Run(userSource, new MessageFactoryGenerator());
 
-            expectedResult.AssertSourceCodesEquals(result.GeneratedCode);
-        }
+        //    expectedResult.AssertSourceCodesEquals(result.GeneratedCode);
+        //}
     }
 
 }

@@ -17,8 +17,12 @@ indent_size = 4
 dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = false
 
+mygenerator_emit_logging2 = true
+
 [*.csproj]
 
 #Ident config
 indent_style = space
 indent_size = 2
+
+mygenerator_emit_logging = true

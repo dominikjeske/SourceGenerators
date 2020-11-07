@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -20,20 +21,28 @@ namespace HomeCenter.SourceGenerators
 
         public void Execute(GeneratorExecutionContext context)
         {
+            if (!Debugger.IsAttached)
+            {
+                Debugger.Launch();
+            }
+
+            var options = new SourceGeneratorOptions(context);
+            using var logger = new SourceGeneratorLogger<ActorProxySourceGenerator>(context, options);
+
             if (context.SyntaxReceiver is ActorSyntaxReceiver actorSyntaxReciver)
             {
                 foreach (var proxy in actorSyntaxReciver.CandidateProxies)
                 {
-                    var source = GenearteProxy(proxy, context);
+                    var source = GenearteProxy(proxy, context, logger);
 
-                    context.TryLogSource<ActorProxySourceGenerator>(proxy, source);
+                    logger.LogGeneratedSource(proxy, source);
 
                     context.AddSource(source.FileName, SourceText.From(source.SourceCode, Encoding.UTF8));
                 }
             }
         }
 
-        private GeneratedSource GenearteProxy(ClassDeclarationSyntax proxy, GeneratorExecutionContext executionContext)
+        private GeneratedSource GenearteProxy(ClassDeclarationSyntax proxy, GeneratorExecutionContext executionContext, ISourceGeneratorLogger logger)
         {
             try
             {
@@ -50,9 +59,10 @@ namespace HomeCenter.SourceGenerators
                 DiagnosticDescriptor Rule = new DiagnosticDescriptor("66666", "Title", "Test", "Test", DiagnosticSeverity.Error, isEnabledByDefault: true, description: "Description xxx");
 
 
-//                executionContext.ReportDiagnostic(Diagnostic.Create(Rule, proxy.GetLocation()));
+                //executionContext.ReportDiagnostic(Diagnostic.Create(Rule, proxy.GetLocation()));
+                //Diagnostic.Create(InvalidXmlWarning, Location.None, xmlFile.Path
 
-                return ex.GenerateErrorSourceCode<ActorProxySourceGenerator>(proxy);
+                return ex.GenerateErrorSourceCode<ActorProxySourceGenerator>(proxy, logger);
             }
         }
 
