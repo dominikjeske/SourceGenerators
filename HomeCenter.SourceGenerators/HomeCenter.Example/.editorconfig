@@ -1,8 +1,3 @@
-﻿[*]
-mygenerator_emit_logging4 = true
+﻿is_global = true
 
-[*.cs]
-mygenerator_emit_logging5 = true
-
-[*.csproj]
-mygenerator_emit_logging6 = true
+mygenerator_emit_loggingxxxxxx = true

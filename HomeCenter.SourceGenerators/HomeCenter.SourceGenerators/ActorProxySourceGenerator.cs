@@ -21,10 +21,10 @@ namespace HomeCenter.SourceGenerators
 
         public void Execute(GeneratorExecutionContext context)
         {
-            if (!Debugger.IsAttached)
-            {
-                Debugger.Launch();
-            }
+            //if (!Debugger.IsAttached)
+            //{
+            //    Debugger.Launch();
+            //}
 
             var options = new SourceGeneratorOptions(context);
             using var logger = new SourceGeneratorLogger<ActorProxySourceGenerator>(context, options);
