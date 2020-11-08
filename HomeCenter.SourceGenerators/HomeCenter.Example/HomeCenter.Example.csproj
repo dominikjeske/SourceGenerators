@@ -5,17 +5,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>preview</LangVersion>
     <SourceGenerator_EnableLogging>True</SourceGenerator_EnableLogging>
-    <SourceGenerator_DetailedLog>True</SourceGenerator_DetailedLog>
+    <SourceGenerator_EnableDebug>False</SourceGenerator_EnableDebug>
+    
+
   </PropertyGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="Test.txt" Type="Text"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <CompilerVisibleProperty Include="SourceGenerator_EnableLogging" />
-    <CompilerVisibleProperty Include="SourceGenerator_DetailedLog" />
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Type" />
   </ItemGroup>
 
   <ItemGroup>

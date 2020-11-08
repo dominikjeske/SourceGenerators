@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -21,48 +20,37 @@ namespace HomeCenter.SourceGenerators
 
         public void Execute(GeneratorExecutionContext context)
         {
-            //if (!Debugger.IsAttached)
-            //{
-            //    Debugger.Launch();
-            //}
-
-            var options = new SourceGeneratorOptions(context);
-            using var logger = new SourceGeneratorLogger<ActorProxySourceGenerator>(context, options);
+            using var sourceGenContext = SourceGeneratorContext<ActorProxySourceGenerator>.Create(context);
 
             if (context.SyntaxReceiver is ActorSyntaxReceiver actorSyntaxReciver)
             {
                 foreach (var proxy in actorSyntaxReciver.CandidateProxies)
                 {
-                    var source = GenearteProxy(proxy, context, logger);
-
-                    logger.LogGeneratedSource(proxy, source);
+                    var source = GenearteProxy(proxy, sourceGenContext);
 
                     context.AddSource(source.FileName, SourceText.From(source.SourceCode, Encoding.UTF8));
                 }
             }
         }
 
-        private GeneratedSource GenearteProxy(ClassDeclarationSyntax proxy, GeneratorExecutionContext executionContext, ISourceGeneratorLogger logger)
+        private GeneratedSource GenearteProxy(ClassDeclarationSyntax proxy, SourceGeneratorContext<ActorProxySourceGenerator> context)
         {
             try
             {
-                var proxyModel = GetModel(proxy, executionContext.Compilation);
+                var proxyModel = GetModel(proxy, context.GeneratorExecutionContext.Compilation);
 
                 var templateString = ResourceReader.GetResource("ActorProxy.scriban");
 
                 var result = TemplateGenerator.Execute(templateString, proxyModel);
 
+                context.TryLogSourceCode(proxy, result);
+
                 return new GeneratedSource(result, proxyModel.ClassName);
             }
             catch (Exception ex)
             {
-                DiagnosticDescriptor Rule = new DiagnosticDescriptor("66666", "Title", "Test", "Test", DiagnosticSeverity.Error, isEnabledByDefault: true, description: "Description xxx");
-
-
-                //executionContext.ReportDiagnostic(Diagnostic.Create(Rule, proxy.GetLocation()));
-                //Diagnostic.Create(InvalidXmlWarning, Location.None, xmlFile.Path
-
-                return ex.GenerateErrorSourceCode<ActorProxySourceGenerator>(proxy, logger);
+                context.TryLogException(proxy, ex);
+                return context.GenerateErrorSourceCode(ex, proxy);
             }
         }
 

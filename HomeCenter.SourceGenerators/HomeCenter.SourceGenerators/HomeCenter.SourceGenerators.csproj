@@ -7,44 +7,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-5.final" PrivateAssets="all" />
-    <PackageReference Include="Scriban" Version="2.1.4" PrivateAssets="all" GeneratePathProperty="true" UseInSourceGenerator="true" />
+    <PackageReference Include="Scriban" Version="2.1.4" PrivateAssets="all" LocalSourceGenerators="true" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HomeCenter.Abstractions\HomeCenter.Abstractions.csproj" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-  </PropertyGroup>
-
-  <Target Name="GetDependencyTargetPaths">
-    <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PkgScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
-    </ItemGroup>
-  </Target>
-
-
- <Target Name="AddPackDependencies" Inputs="@(RuntimeCopyLocalItems)" Outputs="%(RuntimeCopyLocalItems.NuGetPackageId)" AfterTargets="ResolvePackageAssets">
-    <ItemGroup>
-      <NuGetPackageId Include="@(RuntimeCopyLocalItems -> '%(NuGetPackageId)')" />
-    </ItemGroup>
-    <PropertyGroup>
-      <NuGetPackageId>@(NuGetPackageId -&gt; Distinct())</NuGetPackageId>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageReferenceDependency Include="@(PackageReference -&gt; WithMetadataValue('Identity', '$(NuGetPackageId)'))" />
-    </ItemGroup>
-    <PropertyGroup>
-      <NuGetPackagePack>@(PackageReferenceDependency -> '%(UseInSourceGenerator)')</NuGetPackagePack>
-    </PropertyGroup>
-   
-    <!--<Message Condition="'$(NuGetPackagePack)' == 'true' " Text="DDDDDD" Importance="High"></Message>-->
-   
-    <!--<ItemGroup Condition="'$(NuGetPackagePack)' == 'true'">
-      <_PackageFiles Include="@(RuntimeCopyLocalItems)" PackagePath="$(BuildOutputTargetFolder)\$(TargetFramework)\%(Filename)%(Extension)" />
-      <RuntimeCopyLocalItems Update="@(RuntimeCopyLocalItems)" CopyLocal="true" Private="true" />
-      <ResolvedFileToPublish Include="@(RuntimeCopyLocalItems)" CopyToPublishDirectory="PreserveNewest" RelativePath="%(Filename)%(Extension)" />
-    </ItemGroup>-->
-  </Target>
+  
 </Project>

@@ -1,26 +1,56 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
+using System.IO;
 
 namespace HomeCenter.SourceGenerators
 {
-    internal class SourceGeneratorOptions
+    internal class SourceGeneratorOptions<T> where T : ISourceGenerator
     {
         public bool EnableLogging { get; set; }
 
         public bool DetailedLogging { get; set; }
 
+        public bool EnableDebug { get; set; }
+
+        public string LogPath { get; set; }
+
         public List<AdditionalFilesOptions> AdditionalFilesOptions { get; set; } = new List<AdditionalFilesOptions>();
 
         public SourceGeneratorOptions(GeneratorExecutionContext context)
         {
-            if (TryReadGlobalOption(context, "SourceGenerator_EnableLogging", out string enableLogging))
+            if (TryReadGlobalOption(context, "SourceGenerator_EnableLogging", out string enableLogging)
+                && bool.TryParse(enableLogging, out var enableLoggingValue))
             {
-                EnableLogging = bool.Parse(enableLogging);
+                EnableLogging = enableLoggingValue;
             }
 
-            if (TryReadGlobalOption(context, "SourceGenerator_DetailedLog", out string detailedLog))
+            if (TryReadGlobalOption(context, "SourceGenerator_DetailedLog", out string detailedLog)
+                && bool.TryParse(detailedLog, out var detailedLogValue))
             {
-                DetailedLogging = bool.Parse(detailedLog);
+                DetailedLogging = detailedLogValue;
+            }
+
+            if (TryReadGlobalOption(context, "SourceGenerator_LogPath", out string logPath))
+            {
+                LogPath = logPath;
+            }
+            else
+            {
+                var directory = Path.Combine(Directory.GetCurrentDirectory(), "obj");
+                var logfile = Path.Combine(directory, $"{typeof(T).Name}.log");
+                LogPath = logfile;
+            }
+
+            if (TryReadGlobalOption(context, "SourceGenerator_EnableDebug", out string enableDebug)
+                && bool.TryParse(enableDebug, out var enableDebugValue))
+            {
+                EnableDebug = enableDebugValue;
+            }
+
+            if (TryReadGlobalOption(context, $"SourceGenerator_EnableDebug_{typeof(T).Name}", out string debugThisGenerator)
+                && bool.TryParse(debugThisGenerator, out var debugThisGeneratorValue))
+            {
+                EnableDebug = bool.Parse(debugThisGenerator);
             }
 
             foreach (var file in context.AdditionalFiles)
